@@ -10,6 +10,9 @@ import { useApp } from '../context/AppContext';
 import { useTheme } from '../context/ThemeContext';
 import { useAccessibility } from '../hooks/useAccessibility';
 import { calculateBreakdown } from '../services/budget';
+import { AnimatedPieChart } from '../components/AnimatedPieChart';
+import { AnimatedBarChart } from '../components/AnimatedBarChart';
+import { AnimatedCard } from '../components/AnimatedCard';
 
 function SectionLabel({
   icon,
@@ -125,11 +128,15 @@ export function HomeScreen() {
 
       <View style={styles.section}>
         <SectionLabel icon="pie-chart-outline" label="Breakdown" />
-        <BudgetChart
-          data={breakdown}
-          chartType={settings.chartType}
-          currencySymbol={currency.symbol}
-        />
+        {breakdown.length > 0 && (
+          <AnimatedCard animationType="fadeIn" delay={100}>
+            {settings.chartType === 'pie' ? (
+              <AnimatedPieChart data={breakdown} />
+            ) : (
+              <AnimatedBarChart data={breakdown} />
+            )}
+          </AnimatedCard>
+        )}
       </View>
     </ScreenContainer>
   );

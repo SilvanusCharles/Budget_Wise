@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { PresetForm } from '../components/PresetForm';
 import { ScreenContainer } from '../components/ScreenContainer';
+import { AIBudgetSuggestionComponent } from '../components/AIBudgetSuggestionComponent';
 import { BudgetPreset } from '../types';
 import { useApp } from '../context/AppContext';
 import { useTheme } from '../context/ThemeContext';
@@ -53,6 +54,12 @@ export function PresetsScreen() {
 
   return (
     <ScreenContainer>
+      <AIBudgetSuggestionComponent 
+        onPresetGenerated={(presetId) => {
+          // Preset already added by component
+        }}
+      />
+
       <Text style={[styles.heading, { color: colors.text, fontSize: scaled(22) }]}>
         Your presets
       </Text>

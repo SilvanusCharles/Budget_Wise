@@ -4,6 +4,7 @@ import { SettingsScreen } from '../screens/SettingsScreen';
 import { FAQScreen } from '../screens/FAQScreen';
 import { SettingsStackParamList } from './types';
 import { useTheme } from '../context/ThemeContext';
+import { getSlideRightScreenOptions } from './screenTransitions';
 
 const Stack = createNativeStackNavigator<SettingsStackParamList>();
 
@@ -17,6 +18,7 @@ export function SettingsNavigator() {
         headerTintColor: colors.text,
         headerTitleStyle: { fontWeight: '700' },
         contentStyle: { backgroundColor: colors.background },
+        ...getSlideRightScreenOptions(),
       }}
     >
       <Stack.Screen name="SettingsMain" component={SettingsScreen} options={{ title: 'Settings' }} />

@@ -9,7 +9,10 @@ import {
   View,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { Ionicons } from '@expo/vector-icons';
 import { ScreenContainer } from '../components/ScreenContainer';
+import { AnimatedCard } from '../components/AnimatedCard';
+import { AnimatedButton } from '../components/AnimatedButton';
 import { useApp } from '../context/AppContext';
 import { useTheme } from '../context/ThemeContext';
 import { useAccessibility } from '../hooks/useAccessibility';
@@ -60,95 +63,113 @@ export function ProfileScreen() {
         Profile
       </Text>
 
-      <Pressable
-        onPress={pickImage}
-        style={[styles.avatarWrap, { borderColor: colors.primary }]}
-        {...buttonA11y('Change profile picture', 'Opens photo library')}
-      >
-        {avatarUri ? (
-          <Image source={{ uri: avatarUri }} style={styles.avatar} accessibilityIgnoresInvertColors />
-        ) : (
-          <View style={[styles.avatarPlaceholder, { backgroundColor: colors.primary }]}>
-            <Text style={styles.avatarInitial}>{name.charAt(0).toUpperCase() || '?'}</Text>
-          </View>
-        )}
-        <Text style={[styles.changePhoto, { color: colors.primary, fontSize: scaled(13) }]}>
-          Change photo
+      {/* Avatar Section with Background */}
+      <AnimatedCard animationType="fadeIn" delay={0}>
+        <View style={[styles.avatarSection, { backgroundColor: `${colors.primary}08` }]}>
+          <Pressable
+            onPress={pickImage}
+            style={[styles.avatarWrap, { borderColor: colors.primary }]}
+            {...buttonA11y('Change profile picture', 'Opens photo library')}
+          >
+            {avatarUri ? (
+              <Image source={{ uri: avatarUri }} style={styles.avatar} accessibilityIgnoresInvertColors />
+            ) : (
+              <View style={[styles.avatarPlaceholder, { backgroundColor: colors.primary }]}>
+                <Text style={styles.avatarInitial}>{name.charAt(0).toUpperCase() || '?'}</Text>
+              </View>
+            )}
+          </Pressable>
+          <Text style={[styles.changePhoto, { color: colors.primary, fontSize: scaled(13) }]}>
+            Tap to change photo
+          </Text>
+          <Text style={[styles.emailPreview, { color: colors.muted, fontSize: scaled(12) }]}>
+            {email || 'No email set'}
+          </Text>
+        </View>
+      </AnimatedCard>
+
+      {/* Form Section */}
+      <AnimatedCard animationType="slideUp" delay={100}>
+        <Text style={[styles.sectionTitle, { color: colors.text, fontSize: scaled(15) }]}>
+          Personal Information
         </Text>
-      </Pressable>
 
-      <Text style={[styles.label, { color: colors.text, fontSize: scaled(14) }]}>Name</Text>
-      <TextInput
-        value={name}
-        onChangeText={setName}
-        placeholder="Your name"
-        placeholderTextColor={colors.muted}
-        style={[
-          styles.input,
-          { borderColor: colors.border, color: colors.text, backgroundColor: colors.white },
-        ]}
-        accessibilityLabel="Name"
-      />
+        <Text style={[styles.label, { color: colors.text, fontSize: scaled(14) }]}>Name</Text>
+        <TextInput
+          value={name}
+          onChangeText={setName}
+          placeholder="Your name"
+          placeholderTextColor={colors.muted}
+          style={[
+            styles.input,
+            { borderColor: colors.border, color: colors.text, backgroundColor: colors.white },
+          ]}
+          accessibilityLabel="Name"
+        />
 
-      <Text style={[styles.label, { color: colors.text, fontSize: scaled(14) }]}>Email</Text>
-      <TextInput
-        value={email}
-        onChangeText={setEmail}
-        placeholder="you@example.com"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        placeholderTextColor={colors.muted}
-        style={[
-          styles.input,
-          { borderColor: colors.border, color: colors.text, backgroundColor: colors.white },
-        ]}
-        accessibilityLabel="Email"
-      />
+        <Text style={[styles.label, { color: colors.text, fontSize: scaled(14) }]}>Email</Text>
+        <TextInput
+          value={email}
+          onChangeText={setEmail}
+          placeholder="you@example.com"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          placeholderTextColor={colors.muted}
+          style={[
+            styles.input,
+            { borderColor: colors.border, color: colors.text, backgroundColor: colors.white },
+          ]}
+          accessibilityLabel="Email"
+        />
+      </AnimatedCard>
 
-      <Text style={[styles.label, { color: colors.text, fontSize: scaled(14) }]}>
-        Currency
-      </Text>
-      <View
-        style={styles.currencyGrid}
-        accessibilityRole="radiogroup"
-        accessibilityLabel="Select currency"
-      >
-        {currencyRates.map((currency) => {
-          const selected = currency.code === currencyCode;
-          return (
-            <Pressable
-              key={currency.code}
-              onPress={() => setCurrencyCode(currency.code)}
-              style={[
-                styles.currencyChip,
-                {
-                  borderColor: selected ? colors.accent : colors.border,
-                  backgroundColor: selected ? colors.white : 'transparent',
-                },
-              ]}
-              accessibilityRole="radio"
-              accessibilityState={{ selected }}
-              accessibilityLabel={`${currency.name}, ${currency.symbol}`}
-            >
-              <Text style={{ color: colors.text, fontSize: scaled(14), fontWeight: '600' }}>
-                {currency.code}
-              </Text>
-              <Text style={{ color: colors.muted, fontSize: scaled(11) }}>{currency.symbol}</Text>
-            </Pressable>
-          );
-        })}
-      </View>
+      {/* Currency Section */}
+      <AnimatedCard animationType="slideUp" delay={200}>
+        <Text style={[styles.sectionTitle, { color: colors.text, fontSize: scaled(15) }]}>
+          <Ionicons name="cash-outline" size={16} color={colors.primary} /> Currency
+        </Text>
+        <View
+          style={styles.currencyGrid}
+          accessibilityRole="radiogroup"
+          accessibilityLabel="Select currency"
+        >
+          {currencyRates.map((currency) => {
+            const selected = currency.code === currencyCode;
+            return (
+              <Pressable
+                key={currency.code}
+                onPress={() => setCurrencyCode(currency.code)}
+                style={[
+                  styles.currencyChip,
+                  {
+                    borderColor: selected ? colors.accent : colors.border,
+                    backgroundColor: selected ? `${colors.primary}12` : 'transparent',
+                  },
+                ]}
+                accessibilityRole="radio"
+                accessibilityState={{ selected }}
+                accessibilityLabel={`${currency.name}, ${currency.symbol}`}
+              >
+                <Text style={{ color: colors.text, fontSize: scaled(14), fontWeight: '600' }}>
+                  {currency.code}
+                </Text>
+                <Text style={{ color: colors.muted, fontSize: scaled(11) }}>{currency.symbol}</Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      </AnimatedCard>
 
       {hasChanges && (
-        <Pressable
-          onPress={handleSave}
-          style={[styles.saveBtn, { backgroundColor: colors.primary }]}
-          {...buttonA11y('Save profile')}
-        >
-          <Text style={{ color: colors.white, fontSize: scaled(15), fontWeight: '600' }}>
-            Save changes
-          </Text>
-        </Pressable>
+        <AnimatedCard animationType="slideUp" delay={300}>
+          <AnimatedButton
+            label="Save changes"
+            onPress={handleSave}
+            variant="primary"
+            size="large"
+            animationType="bounce"
+          />
+        </AnimatedCard>
       )}
     </ScreenContainer>
   );
@@ -159,9 +180,18 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginBottom: 24,
   },
+  avatarSection: {
+    alignItems: 'center',
+    paddingVertical: 24,
+    borderRadius: 16,
+    marginBottom: 20,
+  },
   avatarWrap: {
     alignItems: 'center',
-    marginBottom: 28,
+    marginBottom: 16,
+    borderWidth: 3,
+    borderRadius: 60,
+    padding: 4,
   },
   avatar: {
     width: 96,
@@ -181,13 +211,20 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   changePhoto: {
-    marginTop: 10,
     fontWeight: '600',
+    marginBottom: 8,
+  },
+  emailPreview: {
+    fontWeight: '500',
+  },
+  sectionTitle: {
+    fontWeight: '700',
+    marginBottom: 16,
   },
   label: {
     fontWeight: '600',
     marginBottom: 8,
-    marginTop: 4,
+    marginTop: 12,
   },
   input: {
     borderWidth: 1,

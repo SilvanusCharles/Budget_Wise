@@ -1,12 +1,14 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import Animated, { FadeInDown, FadeOutUp } from 'react-native-reanimated';
 import { HomeScreen } from '../screens/HomeScreen';
 import { PresetsScreen } from '../screens/PresetsScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { SettingsNavigator } from './SettingsNavigator';
 import { RootTabParamList } from './types';
 import { useTheme } from '../context/ThemeContext';
+import { getFadeScreenOptions } from './screenTransitions';
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
@@ -34,19 +36,40 @@ export function TabNavigator() {
           };
           return <Ionicons name={icons[route.name]} size={size} color={color} />;
         },
+        // Smooth fade transition between tabs
+        cardStyleInterpolator: ({ current }) => ({
+          cardStyle: {
+            opacity: current.progress,
+          },
+        }),
       })}
     >
       <Tab.Screen
         name="Home"
         component={HomeScreen}
-        options={{ headerShown: false, title: 'Budget Vibes' }}
+        options={{
+          headerShown: false,
+          title: 'Budget Vibes',
+        }}
       />
-      <Tab.Screen name="Presets" component={PresetsScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen
+        name="Presets"
+        component={PresetsScreen}
+        options={{
+          title: 'Presets',
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          title: 'Profile',
+        }}
+      />
       <Tab.Screen
         name="Settings"
         component={SettingsNavigator}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, title: 'Settings' }}
       />
     </Tab.Navigator>
   );
