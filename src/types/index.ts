@@ -41,9 +41,26 @@ export interface AppSettings {
   chartType: 'pie' | 'bar';
 }
 
+export type IncomeRange = 'under-30k' | '30k-60k' | '60k-100k' | '100k-plus';
+export type Lifestyle = 'student' | 'professional' | 'family' | 'retiree';
+export type SavingsGoal = 'short-term' | 'long-term' | 'emergency-fund';
+
+export interface OnboardingData {
+  incomeRange: IncomeRange;
+  lifestyle: Lifestyle;
+  savingsGoal: SavingsGoal;
+  dependents: number;
+  currencyCode: string;
+  avatarUri: string | null;
+  completedAt: string;
+  skipped: boolean;
+}
+
 export interface StoredAppData {
   presets: BudgetPreset[];
   profile: UserProfile;
   settings: AppSettings;
   currencyRates: CurrencyRate[];
+  onboardingCompleted: boolean;
+  onboarding: OnboardingData | null;
 }

@@ -1,7 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DEFAULT_CURRENCY_RATES } from '../constants/currencies';
 import { DEFAULT_PRESETS } from '../constants/defaultPresets';
-import { BudgetPreset, StoredAppData, UserProfile, AppSettings } from '../types';
+import { getDefaultOnboardingDraft } from '../constants/onboarding';
+import {
+  BudgetPreset,
+  OnboardingData,
+  StoredAppData,
+  UserProfile,
+  AppSettings,
+} from '../types';
 
 const STORAGE_KEY = '@budget_vibes_data';
 
@@ -24,6 +31,8 @@ export function getDefaultAppData(): StoredAppData {
     profile: DEFAULT_PROFILE,
     settings: DEFAULT_SETTINGS,
     currencyRates: DEFAULT_CURRENCY_RATES,
+    onboardingCompleted: false,
+    onboarding: null,
   };
 }
 
@@ -43,6 +52,8 @@ export async function loadAppData(): Promise<StoredAppData> {
       profile: { ...DEFAULT_PROFILE, ...parsed.profile },
       settings: { ...DEFAULT_SETTINGS, ...parsed.settings },
       currencyRates: parsed.currencyRates ?? DEFAULT_CURRENCY_RATES,
+    onboardingCompleted: parsed.onboardingCompleted ?? !!raw,
+      onboarding: parsed.onboarding ?? null,
     };
   } catch {
     return getDefaultAppData();
@@ -66,4 +77,45 @@ export async function saveProfile(profile: UserProfile): Promise<void> {
 export async function saveSettings(settings: AppSettings): Promise<void> {
   const data = await loadAppData();
   await saveAppData({ ...data, settings });
+}
+
+export async function completeOnboarding(
+  draft: Partial<OnboardingData>,
+  skipped = false,
+): Promise<StoredAppData> {
+  const data = await loadAppData();
+  const defaults = getDefaultOnboardingDraft();
+
+  const onboarding: OnboardingData = {
+    incomeRange: draft.incomeRange ?? defaults.incomeRange,
+    lifestyle: draft.lifestyle ?? defaults.lifestyle,
+    savingsGoal: draft.savingsGoal ?? defaults.savingsGoal,
+    dependents: draft.dependents ?? defaults.dependents,
+    currencyCode: draft.currencyCode ?? defaults.currencyCode,
+    avatarUri: draft.avatarUri ?? defaults.avatarUri,
+    completedAt: new Date().toISOString(),
+    skipped,
+  };
+
+  const profile: UserProfile = {
+    ...data.profile,
+    currencyCode: onboarding.currencyCode,
+    avatarUri: onboarding.avatarUri ?? data.profile.avatarUri,
+  };
+
+  const next: StoredAppData = {
+    ...data,
+    profile,
+    onboarding,
+    onboardingCompleted: true,
+  };
+
+  await saveAppData(next);
+  return next;
+}
+
+export async function resetAppData(): Promise<StoredAppData> {
+  const defaults = getDefaultAppData();
+  await saveAppData(defaults);
+  return defaults;
 }

@@ -1,13 +1,22 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import { BudgetPreset, StoredAppData, UserProfile, AppSettings } from '../types';
-import { loadAppData, saveAppData, savePresets, saveProfile, saveSettings } from '../services/storage';
+import { BudgetPreset, OnboardingData, StoredAppData, UserProfile, AppSettings } from '../types';
+import {
+  completeOnboarding,
+  loadAppData,
+  resetAppData,
+  savePresets,
+  saveProfile,
+  saveSettings,
+} from '../services/storage';
 
 interface AppContextValue extends StoredAppData {
   isLoading: boolean;
   setPresets: (presets: BudgetPreset[]) => Promise<void>;
   setProfile: (profile: UserProfile) => Promise<void>;
   setSettings: (settings: AppSettings) => Promise<void>;
+  finishOnboarding: (draft: Partial<OnboardingData>, skipped?: boolean) => Promise<void>;
+  resetAllData: () => Promise<void>;
   refresh: () => Promise<void>;
 }
 
@@ -41,6 +50,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setData((prev) => (prev ? { ...prev, settings } : prev));
   }, []);
 
+  const finishOnboarding = useCallback(async (draft: Partial<OnboardingData>, skipped = false) => {
+    const next = await completeOnboarding(draft, skipped);
+    setData(next);
+  }, []);
+
+  const resetAllData = useCallback(async () => {
+    const next = await resetAppData();
+    setData(next);
+  }, []);
+
   const value = useMemo<AppContextValue | null>(() => {
     if (!data) return null;
     return {
@@ -49,9 +68,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setPresets,
       setProfile,
       setSettings,
+      finishOnboarding,
+      resetAllData,
       refresh,
     };
-  }, [data, isLoading, setPresets, setProfile, setSettings, refresh]);
+  }, [data, isLoading, setPresets, setProfile, setSettings, finishOnboarding, resetAllData, refresh]);
 
   if (!value) {
     return (

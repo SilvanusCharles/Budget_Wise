@@ -7,6 +7,7 @@ import { ScreenContainer } from '../components/ScreenContainer';
 import { AnimatedCard } from '../components/AnimatedCard';
 import { SettingsStackParamList } from '../navigation/types';
 import { useApp } from '../context/AppContext';
+import { useOnboarding } from '../context/OnboardingContext';
 import { useTheme } from '../context/ThemeContext';
 import { useAccessibility } from '../hooks/useAccessibility';
 import { AnimatedButton } from '../components/AnimatedButton';
@@ -44,7 +45,8 @@ function SettingRow({
 
 export function SettingsScreen() {
   const navigation = useNavigation<Nav>();
-  const { settings, setSettings } = useApp();
+  const { settings, setSettings, resetAllData } = useApp();
+  const { resetDraft } = useOnboarding();
   const { colors } = useTheme();
   const { scaled, buttonA11y } = useAccessibility();
   const { configureOpenAI } = useAIConfiguration();
@@ -60,6 +62,24 @@ export function SettingsScreen() {
 
   const setChartType = async (chartType: 'pie' | 'bar') => {
     await setSettings({ ...settings, chartType });
+  };
+
+  const handleResetApp = () => {
+    Alert.alert(
+      'Reset app data?',
+      'This clears presets, profile, settings, and onboarding. You will see the setup flow again.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Reset',
+          style: 'destructive',
+          onPress: async () => {
+            resetDraft();
+            await resetAllData();
+          },
+        },
+      ],
+    );
   };
 
   return (
@@ -159,6 +179,23 @@ export function SettingsScreen() {
             );
           })}
         </View>
+      </AnimatedCard>
+
+      <AnimatedCard animationType="slideUp" delay={350}>
+        <View style={styles.sectionHeader}>
+          <Ionicons name="refresh-outline" size={20} color={colors.primary} />
+          <Text style={[styles.section, { color: colors.muted, fontSize: scaled(12) }]}>DATA</Text>
+        </View>
+        <Pressable
+          onPress={handleResetApp}
+          style={[styles.linkRow, { backgroundColor: colors.white, borderColor: colors.border }]}
+          {...buttonA11y('Reset app data', 'Clears local data and shows onboarding again')}
+        >
+          <Text style={{ color: colors.accent, fontSize: scaled(16), fontWeight: '600' }}>
+            Reset app data
+          </Text>
+          <Text style={{ color: colors.muted, fontSize: scaled(20) }}>›</Text>
+        </Pressable>
       </AnimatedCard>
 
       <AnimatedCard animationType="slideUp" delay={300}>
