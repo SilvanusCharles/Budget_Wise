@@ -29,7 +29,7 @@ export function AnimatedButton({
 }: AnimatedButtonProps) {
   const { colors } = useTheme();
   const { scaled } = useAccessibility();
-  const buttonRef = useRef<Animatable.View>(null);
+  const buttonRef = useRef<any>(null);
   const [isPressed, setIsPressed] = useState(false);
 
   const getBackgroundColor = () => {

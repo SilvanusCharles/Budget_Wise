@@ -17,6 +17,8 @@ const DEFAULT_PROFILE: UserProfile = {
   email: '',
   avatarUri: null,
   currencyCode: 'USD',
+  monthlyIncome: 0,
+  dependents: 0,
 };
 
 const DEFAULT_SETTINGS: AppSettings = {
@@ -52,7 +54,7 @@ export async function loadAppData(): Promise<StoredAppData> {
       profile: { ...DEFAULT_PROFILE, ...parsed.profile },
       settings: { ...DEFAULT_SETTINGS, ...parsed.settings },
       currencyRates: parsed.currencyRates ?? DEFAULT_CURRENCY_RATES,
-    onboardingCompleted: parsed.onboardingCompleted ?? !!raw,
+      onboardingCompleted: parsed.onboardingCompleted ?? false,
       onboarding: parsed.onboarding ?? null,
     };
   } catch {

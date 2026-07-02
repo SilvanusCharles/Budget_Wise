@@ -50,7 +50,6 @@ export function OnboardingSuccessScreen() {
               autoPlay
               loop={false}
               style={styles.lottie}
-              onError={() => setShowFallback(true)}
             />
           )}
         </View>

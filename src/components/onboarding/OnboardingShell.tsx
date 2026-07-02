@@ -10,9 +10,9 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useTheme } from '../context/ThemeContext';
-import { useAccessibility } from '../hooks/useAccessibility';
-import { getCardShadow } from '../constants/colors';
+import { useTheme } from '../../context/ThemeContext';
+import { useAccessibility } from '../../hooks/useAccessibility';
+import { getCardShadow } from '../../constants/colors';
 
 interface OnboardingShellProps {
   step: number;

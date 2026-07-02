@@ -90,7 +90,7 @@ export function SettingsScreen() {
 
       <AnimatedCard animationType="fadeIn" delay={0}>
         <View style={styles.sectionHeader}>
-          <Ionicons name="palette-outline" size={20} color={colors.primary} />
+          <Ionicons name="color-palette-outline" size={20} color={colors.primary} />
           <Text style={[styles.section, { color: colors.muted, fontSize: scaled(12) }]}>APPEARANCE</Text>
         </View>
         <SettingRow label="Dark mode" description="Switch between light and dark themes">

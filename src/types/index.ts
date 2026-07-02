@@ -26,6 +26,8 @@ export interface UserProfile {
   email: string;
   avatarUri: string | null;
   currencyCode: string;
+  monthlyIncome: number;
+  dependents: number;
 }
 
 export interface CurrencyRate {

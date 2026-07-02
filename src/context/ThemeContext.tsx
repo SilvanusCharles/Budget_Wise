@@ -2,7 +2,16 @@ import React, { createContext, useContext, useMemo } from 'react';
 import { DarkPalette, Palette } from '../constants/colors';
 import { useApp } from './AppContext';
 
-export type ThemeColors = typeof Palette;
+export interface ThemeColors {
+  primary: string;
+  secondary: string;
+  background: string;
+  accent: string;
+  text: string;
+  white: string;
+  border: string;
+  muted: string;
+}
 
 interface ThemeContextValue {
   colors: ThemeColors;

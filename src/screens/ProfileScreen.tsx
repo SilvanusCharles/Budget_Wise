@@ -53,7 +53,14 @@ export function ProfileScreen() {
   };
 
   const handleSave = async () => {
-    await setProfile({ name, email, avatarUri, currencyCode });
+    await setProfile({
+      name,
+      email,
+      avatarUri,
+      currencyCode,
+      monthlyIncome: profile.monthlyIncome,
+      dependents: profile.dependents,
+    });
     Alert.alert('Saved', 'Your profile has been updated.');
   };
 

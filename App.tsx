@@ -6,6 +6,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { AppProvider } from './src/context/AppContext';
 import { ThemeProvider, useTheme } from './src/context/ThemeContext';
+import { OnboardingProvider } from './src/context/OnboardingContext';
 import { AppNavigator } from './src/navigation/AppNavigator';
 
 function AppContent() {
@@ -25,7 +26,9 @@ export default function App() {
       <SafeAreaProvider>
         <AppProvider>
           <ThemeProvider>
-            <AppContent />
+            <OnboardingProvider>
+              <AppContent />
+            </OnboardingProvider>
           </ThemeProvider>
         </AppProvider>
       </SafeAreaProvider>

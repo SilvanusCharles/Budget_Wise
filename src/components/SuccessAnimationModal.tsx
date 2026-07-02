@@ -71,10 +71,6 @@ export function SuccessAnimationModal({
                 onAnimationFinish={() => {
                   // Animation finished, ready to auto-close
                 }}
-                onError={() => {
-                  // If Lottie file fails to load, show fallback
-                  setShowFallback(true);
-                }}
               />
             )}
           </View>

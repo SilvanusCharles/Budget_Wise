@@ -37,11 +37,7 @@ export function TabNavigator() {
           return <Ionicons name={icons[route.name]} size={size} color={color} />;
         },
         // Smooth fade transition between tabs
-        cardStyleInterpolator: ({ current }) => ({
-          cardStyle: {
-            opacity: current.progress,
-          },
-        }),
+        // Note: Bottom tabs do not support custom card interpolators in the same way as stacks.
       })}
     >
       <Tab.Screen
